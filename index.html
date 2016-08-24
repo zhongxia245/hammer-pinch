@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <style>
+    .container {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background-color: rgba(0, 0, 0, .5);
+    }
+    
+    .point {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 3px solid black;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <img id="pic" src="./img/bg.jpg" width="100%" />
+    <div class="point">1</div>
+    <div class="point">2</div>
+    <div class="point">3</div>
+    <div class="point">4</div>
+  </div>
+  <script src="js/scale.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+      ImagesZoom.init({
+        "elem": "#primary"
+      });
+    }, false);
+  </script>
+</body>
+
+</html>
