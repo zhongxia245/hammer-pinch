@@ -1,6 +1,6 @@
 /***************************************************
  * 时间: 16/7/2 18:35
- * 作者: 从腾讯新闻 下载的代码
+ * 作者: 从 腾讯新闻WebApp 下载的代码
  * 使用方式
  document.addEventListener("DOMContentLoaded", function(event){
 		ImagesZoom.init({
@@ -23,6 +23,7 @@
   }
 
   function getPage(event, page) {
+    debugger;
     return support.touch ? event.changedTouches[0][page] : event[page];
   }
 
@@ -30,12 +31,11 @@
   };
 
   ImagesZoom.prototype = {
-    // 缁欏垵濮嬪寲鏁版嵁
     init: function (param) {
       var self = this;
       var params = param || {};
 
-      //添加图片放大容器,缩放, 放大, 移动
+      //如果图片容器不存在,则创建
       if (document.querySelectorAll('.imgzoom_pack').length === 0) {
         var section = document.createElement('section')
         section.classList.add('imgzoom_pack')
@@ -52,9 +52,9 @@
       var zoomClose = document.querySelector(".imgzoom_pack .imgzoom_x");
       var imgSrc = "";
 
-      self.buffMove = 3; //缂撳啿绯绘暟
-      self.buffScale = 2; //鏀惧ぇ绯绘暟
-      self.finger = false; //瑙︽懜鎵嬫寚鐨勭姸鎬� false锛氬崟鎵嬫寚 true锛氬鎵嬫寚
+      self.buffMove = 3;
+      self.buffScale = 2;
+      self.finger = false;
 
       self._destroy();
 
@@ -77,7 +77,7 @@
           zoomImg.onload = function () {
             zoomImg.style.cssText = "margin-top:-" + (zoomImg.offsetHeight / 2) + "px";
 
-            // 绂佹椤甸潰婊氬姩
+            //图片放大查看时,document不允许左右滑动,以免前进后退
             document.addEventListener("touchmove", self.eventStop, false);
 
             self.imgBaseWidth = zoomImg.offsetWidth;
@@ -100,15 +100,15 @@
       self.element = document.querySelector(".imgzoom_pack img");
 
       //config set
-      self.wrapX = params.wrapX || 0; //鍙鍖哄煙瀹藉害
-      self.wrapY = params.wrapY || 0; //鍙鍖哄煙楂樺害
-      self.mapX = params.mapX || 0; //鍦板浘瀹藉害
-      self.mapY = params.mapY || 0; //鍦板浘楂樺害
+      self.wrapX = params.wrapX || 0;
+      self.wrapY = params.wrapY || 0;
+      self.mapX = params.mapX || 0;
+      self.mapY = params.mapY || 0;
 
-      self.outDistY = (self.mapY - self.wrapY) / 2; //鍥剧墖瓒呰繃涓€灞忕殑鏃跺€欐湁鐢�
+      self.outDistY = (self.mapY - self.wrapY) / 2;
 
-      self.width = self.mapX - self.wrapX; //鍦板浘鐨勫搴﹀噺鍘诲彲瑙嗗尯鍩熺殑瀹藉害
-      self.height = self.mapY - self.wrapY; //鍦板浘鐨勯珮搴﹀噺鍘诲彲瑙嗗尯鍩熺殑楂樺害
+      self.width = self.mapX - self.wrapX;
+      self.height = self.mapY - self.wrapY;
 
       self.element.addEventListener("touchstart", function (e) {
         self._touchstart(e);
@@ -120,7 +120,8 @@
         self._touchend(e);
       }, false);
     },
-    // 閲嶇疆鍧愭爣鏁版嵁
+
+    // 移动结束之后,图片回到中心位置
     _destroy: function () {
       this.distX = 0;
       this.distY = 0;
@@ -128,13 +129,13 @@
       this.newY = 0;
 
     },
-    // 鏇存柊鍦板浘淇℃伅
+    // 移动后修改数据
     _changeData: function () {
-      this.mapX = this.element.offsetWidth; //鍦板浘瀹藉害
-      this.mapY = this.element.offsetHeight; //鍦板浘楂樺害
-      // this.outDistY = (this.mapY - this.wrapY)/2; //褰撳浘鐗囬珮搴﹁秴杩囧睆骞曠殑楂樺害鏃跺€欍€傚浘鐗囨槸鍨傜洿灞呬腑鐨勶紝杩欐椂绉诲姩鏈変釜楂樺害鍋氫负缂撳啿甯�
-      this.width = this.mapX - this.wrapX; //鍦板浘鐨勫搴﹀噺鍘诲彲瑙嗗尯鍩熺殑瀹藉害
-      this.height = this.mapY - this.wrapY; //鍦板浘鐨勯珮搴﹀噺鍘诲彲瑙嗗尯鍩熺殑楂樺害
+      this.mapX = this.element.offsetWidth;
+      this.mapY = this.element.offsetHeight;
+      // this.outDistY = (this.mapY - this.wrapY)/2;
+      this.width = this.mapX - this.wrapX;
+      this.height = this.mapY - this.wrapY;
     },
     _touchstart: function (e) {
       var self = this;
@@ -144,9 +145,9 @@
 
       e.preventDefault();
 
-      var touchTarget = e.targetTouches.length; //鑾峰緱瑙︽帶鐐规暟
+      var touchTarget = e.targetTouches.length;
 
-      self._changeData(); //閲嶆柊鍒濆鍖栧浘鐗囥€佸彲瑙嗗尯鍩熸暟鎹紝鐢变簬鏀惧ぇ浼氫骇鐢熸柊鐨勮绠�
+      self._changeData();
 
       if (touchTarget == 1) {
         // 鑾峰彇寮€濮嬪潗鏍�
